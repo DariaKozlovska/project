@@ -60,6 +60,25 @@ def yaml_file(file_path):
     
     return None
 
+def save_yaml(data, file_path):
+    try:
+        if not os.path.exists(file_path):
+            directory = os.path.dirname(file_path)
+            if directory:
+                os.makedirs(directory, exist_ok=True)
+            else:
+                file_path = os.path.join(os.getcwd(), file_path)
+                directory = os.path.dirname(file_path)
+                os.makedirs(directory, exist_ok=True)
+            with open(file_path, 'w') as file:
+                file.write('') 
+            print("Created new YAML file: ", file_path)
+
+        with open(file_path, 'w') as file:
+            yaml.dump(data, file, default_flow_style=False)
+    except Exception as e:
+        print("Error: ", e)
+
 def main():
     args = get_args()
     input_file = args.input_file
@@ -81,6 +100,8 @@ def main():
 
     if output_file.lower().endswith('.json'):
         save_json(data, output_file)
+    elif output_file.lower().endswith('.yaml'):
+        save_yaml(data, output_file)
     else:
         print("Unsupported file format. Currently, only .yaml/.yml, .json, and .xml files are supported for writing.")
         return
