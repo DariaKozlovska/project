@@ -95,6 +95,32 @@ def xml_file(file_path):
     
     return None
 
+def save_xml(data, file_path):
+    try:
+        root_key = next(iter(data))
+        root_value = data[root_key]
+        xml_data = {root_key: root_value}
+
+        if not os.path.exists(file_path):
+            directory = os.path.dirname(file_path)
+            if directory:
+                os.makedirs(directory, exist_ok=True)
+            else:
+                file_path = os.path.join(os.getcwd(), file_path)
+                directory = os.path.dirname(file_path)
+                os.makedirs(directory, exist_ok=True)
+            with open(file_path, 'w') as file:
+                file.write('')
+
+        xml_content = xmltodict.unparse(xml_data, pretty=True)
+        with open(file_path, 'w') as file:
+            file.write(xml_content)
+
+        print("Data saved to XML file: ", file_path)
+
+    except Exception as e:
+        print("Error: ", e)
+
 def main():
     args = get_args()
     input_file = args.input_file
@@ -115,13 +141,15 @@ def main():
         print("Failed to load data.")
         return
 
-
     if output_file.lower().endswith('.json'):
         save_json(data, output_file)
     elif output_file.lower().endswith('.yaml'):
         save_yaml(data, output_file)
+    elif output_file.lower().endswith('.xml'):
+        data = {"body": data}
+        save_xml(data, output_file)
     else:
-        print("Unsupported file format. Currently, only .yaml/.yml, .json, and .xml files are supported for writing.")
+        print("Unsupported file format.")
         return
 
     print("Data successfully saved to ", output_file)
