@@ -1,0 +1,34 @@
+name: Build exe
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: windows-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                python-version: '3.x'
+
+            - name: Run custom setup script
+              run: ./installResources.sh
+              shell: bash
+            
+            - name: Build executable
+              run: pyinstaller --onefile --noconsole main.py
+            
+            - name: Upload artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: data-format-converter
+                path: dist/main.exe
