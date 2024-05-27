@@ -21,7 +21,7 @@ jobs:
                 python-version: '3.x'
 
             - name: Run custom setup script
-              run: ./installResources.sh
+              run: ./InstalResources.sh
               shell: bash
             
             - name: Build executable
