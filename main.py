@@ -15,13 +15,12 @@ def json_file(file_path):
 
     try: 
         with open(file_path, 'r') as file:
-            return json.load(file)
+            data = json.load(file)
+            return data
     except json.JSONDecodeError as e:
         print("Error decoding JSON: ", e)
     except Exception as e:
         print("An error occurred: ", e)
 
     return None
-
-
 
